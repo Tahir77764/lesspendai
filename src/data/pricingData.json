@@ -1,0 +1,185 @@
+{
+  "categories": [
+    {
+      "id": "ide_dev_tools",
+      "name": "IDE & Developer Tools",
+      "tools": [
+        {
+          "vendor": "Cursor",
+          "plans": [
+            {
+              "name": "Pro",
+              "monthlyPrice": 20,
+              "annualPrice": 192,
+              "perUser": true,
+              "auditLogic": "Standard for solo/small teams."
+            },
+            {
+              "name": "Teams",
+              "monthlyPrice": 40,
+              "annualPrice": 432,
+              "perUser": true,
+              "auditLogic": "Overspend Signal: 1-2 users on Team (use Pro instead)."
+            }
+          ]
+        },
+        {
+          "vendor": "GitHub Copilot",
+          "plans": [
+            {
+              "name": "Individual",
+              "monthlyPrice": 10,
+              "annualPrice": 100,
+              "perUser": false,
+              "auditLogic": "Best for solo devs."
+            },
+            {
+              "name": "Business",
+              "monthlyPrice": 19,
+              "annualPrice": 204,
+              "perUser": true,
+              "auditLogic": "Required for IP protection/policy controls."
+            }
+          ]
+        },
+        {
+          "vendor": "Windsurf",
+          "plans": [
+            {
+              "name": "Pro",
+              "monthlyPrice": 20,
+              "annualPrice": 192,
+              "perUser": false,
+              "auditLogic": "Redundancy Alert: Overlaps 100% with Cursor Pro."
+            },
+            {
+              "name": "Teams",
+              "monthlyPrice": 30,
+              "annualPrice": 324,
+              "perUser": true,
+              "auditLogic": "Check seat minimums (often 3-seat floor)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "general_purpose_llms",
+      "name": "General Purpose LLMs",
+      "tools": [
+        {
+          "vendor": "ChatGPT",
+          "plans": [
+            {
+              "name": "Plus",
+              "monthlyPrice": 20,
+              "annualPrice": null,
+              "perUser": false,
+              "auditLogic": "Individual power users."
+            },
+            {
+              "name": "Team",
+              "monthlyPrice": 30,
+              "annualPrice": 300,
+              "perUser": true,
+              "auditLogic": "Critical: 2-seat minimum. Avoid for solo users.",
+              "minimumSeats": 2
+            }
+          ]
+        },
+        {
+          "vendor": "Claude",
+          "plans": [
+            {
+              "name": "Pro",
+              "monthlyPrice": 20,
+              "annualPrice": null,
+              "perUser": false,
+              "auditLogic": "Best for heavy reasoning/coding tasks."
+            },
+            {
+              "name": "Power",
+              "monthlyPrice": 125,
+              "annualPrice": 1350,
+              "perUser": false,
+              "auditLogic": "Overspend Signal: Only for 24/7 \"Claude Code\" users."
+            },
+            {
+              "name": "Team",
+              "monthlyPrice": 30,
+              "annualPrice": 300,
+              "perUser": true,
+              "auditLogic": "Overspend Signal: 5-seat minimum ($150/mo floor).",
+              "minimumSeats": 5
+            }
+          ]
+        },
+        {
+          "vendor": "Gemini",
+          "plans": [
+            {
+              "name": "Business",
+              "monthlyPrice": 20,
+              "annualPrice": 216,
+              "perUser": true,
+              "auditLogic": "Best for Workspace/Drive integration."
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": 30,
+              "annualPrice": 324,
+              "perUser": true,
+              "auditLogic": "Only for advanced security/AI recording."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "heuristics": {
+    "seatFloorTrap": [
+      {
+        "vendor": "Claude Team",
+        "description": "5-seat minimum ($150/mo). If an org has 2 users, they are overpaying by $90/mo."
+      },
+      {
+        "vendor": "ChatGPT Team",
+        "description": "2-seat minimum."
+      }
+    ],
+    "functionalRedundancy": [
+      {
+        "name": "The Coding Double-Dip",
+        "tools": [
+          "Cursor",
+          "GitHub Copilot",
+          "Windsurf"
+        ],
+        "recommendation": "Consolidate to one IDE AI."
+      },
+      {
+        "name": "The Model Double-Dip",
+        "tools": [
+          "ChatGPT Plus",
+          "Claude Pro"
+        ],
+        "recommendation": "Use a model aggregator (Perplexity Pro / Poe) at $20/mo to access both."
+      }
+    ],
+    "tierRightSizing": [
+      {
+        "name": "Teams vs. Pro",
+        "description": "Only move to 'Team' if Admin Controls, Shared Billing, or SSO are mandatory. For 1-2 person startups, 'Individual/Pro' plans usually save $10-$20 per user/mo."
+      },
+      {
+        "name": "Monthly vs. Annual",
+        "description": "Most 2026 AI tools offer 15-20% discounts for annual commitments."
+      }
+    ]
+  },
+  "formulas": {
+    "consolidationSavings": "Annual Savings = (Redundant Tool Cost * 12)",
+    "tierOptimization": "Annual Savings = (Current Seat Price - Optimized Seat Price) * Seats * 12",
+    "billingCycleOptimization": "Annual Savings = (Monthly Price * 12) - Annual Pre-pay Price"
+  }
+}
