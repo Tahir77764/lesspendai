@@ -33,3 +33,26 @@
 - Create pages and link to each other
 - Implement audit engine
 - Add results dashboard
+
+## Day 2 - 2026-05-07
+**Hours worked:** 4:00
+
+**What I did today:**
+- Recreated the complete Landing Page UI (`/`) using Tailwind CSS v4 and Lucide icons based on the provided reference design.
+- Built a multi-step interactive Audit Form (`/audit/page.tsx`) to capture users' AI tool stacks, team sizes, and current spending.
+- Configured dynamic form state to clear default values and added visual stepper progress (e.g. highlighting "Your Details" when step 1 is complete).
+- Implemented the core Audit Engine logic (`src/lib/pricing.ts`) capable of detecting seat minimum traps and redundant overlapping subscriptions.
+- Created the Results Dashboard UI (`/audit/results/page.tsx`) featuring a detailed Stack Comparison (Your Current Stack vs. The Perfect Stack).
+- Integrated the Gemini API (`gemini-1.5-flash`) within a Server Component to auto-generate a personalized executive summary based on the exact audit findings.
+- Resolved module resolution issues by correcting `tsconfig.json` path aliases (`"@/*": ["./src/*"]`).
+
+**What I learned today**
+- Form state management in React across multi-step wizard flows.
+- Passing complex application state via URL query parameters for stateless Server Component rendering.
+- Implementing Google's Gemini API REST endpoints natively within Next.js App Router without exposing client-side API keys.
+- Managing third-party library updates (handling removed icons like `Github` in `lucide-react`).
+
+**Plan for tomorrow:**
+- Refine responsive design for mobile views across all pages.
+- Potentially integrate database storage (Supabase) to save historical audit reports.
+- Expand pricing heuristics to cover more enterprise-grade AI tools.
