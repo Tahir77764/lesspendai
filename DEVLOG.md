@@ -56,3 +56,22 @@
 - Refine responsive design for mobile views across all pages.
 - Potentially integrate database storage (Supabase) to save historical audit reports.
 - Expand pricing heuristics to cover more enterprise-grade AI tools.
+
+## Day 4 - 2026-05-09
+**Hours worked:** 4:00
+
+**What I did today:**
+- Expanded `ROADMAP.md` into a highly detailed 5-phase execution plan for scaling the SaaS MVP.
+- Overhauled the core Audit Engine logic (`src/lib/pricing.ts`) to be asynchronous and much smarter, detecting edge cases like "Shadow AI Spend", "The Ultimate Aggregator Swap" (Perplexity replacing ChatGPT + Claude), and developer tool redundancies.
+- Developed a Real-Time Pricing Algorithm (`src/lib/pricing-fetcher.ts`). It maps tool IDs to their official pricing URLs, fetches the live HTML, parses it with `cheerio`, and securely uses the Gemini API to extract the exact real-time monthly subscription fees.
+- Integrated the real-time pricing engine into the Next.js server component to ensure audit reports always reflect live market prices without breaking due to UI layout changes on third-party sites.
+- Rebuilt the Results Dashboard UI (`/audit/results/page.tsx` & `ResultsClient.tsx`) into a highly satisfying, premium dark-mode interface utilizing `framer-motion` for spring-loaded entrance animations, glassmorphic cards, and hover effects.
+
+**What I learned today**
+- Combining traditional HTML parsing (`cheerio`) with an LLM (Gemini 1.5 Flash) creates a highly resilient web scraper that bypasses DOM structure changes.
+- Using `Promise.all` alongside Next.js Server Components and `fetch` cache rules (`next: { revalidate: 3600 }`) allows for dynamic 3rd-party data fetching without significantly impacting page load times.
+- Integrating Framer Motion for sophisticated UI micro-interactions while cleanly separating server logic from client rendering in the App Router.
+
+**Plan for tomorrow:**
+- Move forward with Phase 2: Supabase setup and Database schemas.
+- Implement the 'Save & Share' feature to capture user leads.
