@@ -1,22 +1,4 @@
-import { getLivePricingMap, RealPricing } from "./pricing-fetcher";
-
-export type ToolId = 
-  | "chatgpt-plus" 
-  | "chatgpt-team" 
-  | "claude-pro" 
-  | "claude-team" 
-  | "cursor" 
-  | "github-copilot" 
-  | "gemini-advanced" 
-  | "perplexity-pro" 
-  | "other";
-
-export interface AuditInput {
-  tools: ToolId[];
-  teamSize: number;
-  monthlySpend: number;
-  primaryUseCase: string;
-}
+import { AuditInput, ToolSelection } from "./types";
 
 export interface Recommendation {
   title: string;
@@ -32,165 +14,153 @@ export interface AuditReport {
   totalSavingsAnnual: number;
   savingsPercentage: number;
   recommendations: Recommendation[];
-  optimizedTools: ToolId[];
-  // Include the dynamic pricing map so the UI can show the live prices
-  pricingMap: Record<string, { name: string, basePrice: number, perUser: boolean, minSeats?: number }>;
+  optimizedTools: ToolSelection[];
 }
 
-// Fallback static pricing (Used if dynamic fetch fails)
-export const FALLBACK_PRICING: Record<string, { name: string, basePrice: number, perUser: boolean, minSeats?: number }> = {
-  "chatgpt-plus": { name: "ChatGPT Plus", basePrice: 20, perUser: true }, 
-  "chatgpt-team": { name: "ChatGPT Team", basePrice: 30, perUser: true, minSeats: 2 },
-  "claude-pro": { name: "Claude Pro", basePrice: 20, perUser: true },
-  "claude-team": { name: "Claude Team", basePrice: 30, perUser: true, minSeats: 5 },
-  "cursor": { name: "Cursor", basePrice: 20, perUser: true },
-  "github-copilot": { name: "GitHub Copilot", basePrice: 19, perUser: true },
-  "gemini-advanced": { name: "Gemini Advanced", basePrice: 20, perUser: true },
-  "perplexity-pro": { name: "Perplexity Pro", basePrice: 20, perUser: true },
-};
-
-/**
- * Async Audit Engine: Fetches real-time prices from original URLs before calculating.
- */
-export async function generateAuditReport(input: AuditInput): Promise<AuditReport> {
-  // 1. Fetch real-time pricing for the tools in the user's stack and potential optimization targets
-  const toolsToFetch = Array.from(new Set([...input.tools, "chatgpt-plus", "claude-pro", "perplexity-pro"])) as ToolId[];
-  const liveDataMap = await getLivePricingMap(toolsToFetch);
-
-  // 2. Build the dynamic pricing map by merging live data with fallbacks
-  const dynamicPricing = { ...FALLBACK_PRICING };
-  
-  for (const [tool, liveData] of Object.entries(liveDataMap)) {
-    if (liveData && dynamicPricing[tool]) {
-      // If the tool is a "team" variant, use the team price, otherwise individual
-      if (tool.includes('team') && liveData.team_monthly_price_per_user) {
-        dynamicPricing[tool].basePrice = liveData.team_monthly_price_per_user;
-      } else if (liveData.individual_monthly_price) {
-        dynamicPricing[tool].basePrice = liveData.individual_monthly_price;
-      }
-    }
-  }
-
-  let currentEstimatedSpend = 0;
+export function generateAuditReport(input: AuditInput): AuditReport {
+  let currentSpend = 0;
   const recommendations: Recommendation[] = [];
-  let optimizedTools = [...input.tools];
+  let optimizedTools: ToolSelection[] = JSON.parse(JSON.stringify(input.tools));
   let totalSavingsMonthly = 0;
-  
-  // 3. Calculate current estimated spend based on team size & live pricing
+
+  // Calculate user's reported total spend
   input.tools.forEach(tool => {
-    const pricing = dynamicPricing[tool];
-    if (pricing) {
-      if (pricing.minSeats) {
-        const seats = Math.max(pricing.minSeats, input.teamSize);
-        currentEstimatedSpend += pricing.basePrice * seats;
-      } else {
-        currentEstimatedSpend += pricing.basePrice * input.teamSize;
-      }
-    }
+    currentSpend += tool.monthlySpend;
   });
 
-  // Overwrite with user's reported spend if it's vastly different (shadow AI spend)
-  let baseSpend = currentEstimatedSpend > 0 ? currentEstimatedSpend : input.monthlySpend;
-
-  // --- Advanced Engine Rules ---
-
-  // Rule 1: Seat Minimum Trap (Claude Team)
-  if (input.tools.includes("claude-team") && input.teamSize < 5) {
-    const currentCost = 5 * dynamicPricing["claude-team"].basePrice;
-    const optimizedCost = input.teamSize * dynamicPricing["claude-pro"].basePrice;
-    const savings = currentCost - optimizedCost;
-    recommendations.push({
-      title: "Claude Team Minimum Seat Trap",
-      description: `Claude Team requires 5 seats minimum ($${currentCost}/mo). For your team of ${input.teamSize}, downgrading to individual Claude Pro accounts is much more cost-effective.`,
-      savingsMonthly: savings,
-      type: "seat-trap"
-    });
-    totalSavingsMonthly += savings;
-    optimizedTools = optimizedTools.filter(t => t !== "claude-team");
-    if (!optimizedTools.includes("claude-pro")) optimizedTools.push("claude-pro");
+  // Rule 1: Claude Team Seat Minimum Trap
+  const claudeTool = optimizedTools.find(t => t.toolId === "claude");
+  if (claudeTool && claudeTool.planId === "team" && claudeTool.seats < 5) {
+    // They are paying for 5 seats minimum ($150), but only have <5 users.
+    const currentCost = claudeTool.monthlySpend > 0 ? claudeTool.monthlySpend : 150;
+    const proCost = claudeTool.seats * 20; // Pro is $20
+    const savings = currentCost - proCost;
+    if (savings > 0) {
+      recommendations.push({
+        title: "Claude Team Minimum Seat Trap",
+        description: `Claude Team requires 5 seats minimum ($150/mo floor). For ${claudeTool.seats} users, downgrade to individual Claude Pro accounts to save money.`,
+        savingsMonthly: savings,
+        type: "seat-trap"
+      });
+      totalSavingsMonthly += savings;
+      claudeTool.planId = "pro";
+      claudeTool.monthlySpend = proCost;
+    }
   }
 
-  // Rule 2: Seat Minimum Trap (ChatGPT Team)
-  if (input.tools.includes("chatgpt-team") && input.teamSize < 2) {
-    const currentCost = 2 * dynamicPricing["chatgpt-team"].basePrice;
-    const optimizedCost = input.teamSize * dynamicPricing["chatgpt-plus"].basePrice;
-    const savings = currentCost - optimizedCost;
-    recommendations.push({
-      title: "ChatGPT Team Minimum Seat Trap",
-      description: "ChatGPT Team requires 2 seats minimum. Since you have a team of 1, switching to ChatGPT Plus will save you money.",
-      savingsMonthly: savings,
-      type: "seat-trap"
-    });
-    totalSavingsMonthly += savings;
-    optimizedTools = optimizedTools.filter(t => t !== "chatgpt-team");
-    if (!optimizedTools.includes("chatgpt-plus")) optimizedTools.push("chatgpt-plus");
+  // Rule 2: ChatGPT Team Seat Minimum Trap
+  const gptTool = optimizedTools.find(t => t.toolId === "chatgpt");
+  if (gptTool && gptTool.planId === "team" && gptTool.seats < 2) {
+    const currentCost = gptTool.monthlySpend > 0 ? gptTool.monthlySpend : 60; // 2 seats * 30
+    const plusCost = gptTool.seats * 20;
+    const savings = currentCost - plusCost;
+    if (savings > 0) {
+      recommendations.push({
+        title: "ChatGPT Team Overkill",
+        description: `ChatGPT Team is designed for 2+ users. As a solo user, switch to ChatGPT Plus.`,
+        savingsMonthly: savings,
+        type: "seat-trap"
+      });
+      totalSavingsMonthly += savings;
+      gptTool.planId = "plus";
+      gptTool.monthlySpend = plusCost;
+    }
   }
 
-  // Rule 3: The Ultimate Model Aggregator Swap
-  const hasChatGpt = input.tools.includes("chatgpt-plus") || input.tools.includes("chatgpt-team");
-  const hasClaude = input.tools.includes("claude-pro") || input.tools.includes("claude-team");
-  
-  if (hasChatGpt && hasClaude) {
-    const gptCost = input.tools.includes("chatgpt-team") 
-      ? Math.max(2, input.teamSize) * dynamicPricing["chatgpt-team"].basePrice 
-      : input.teamSize * dynamicPricing["chatgpt-plus"].basePrice;
-      
-    const claudeCost = input.tools.includes("claude-team") 
-      ? Math.max(5, input.teamSize) * dynamicPricing["claude-team"].basePrice 
-      : input.teamSize * dynamicPricing["claude-pro"].basePrice;
-    
-    const combinedCurrentCost = gptCost + claudeCost;
-    const perplexityCost = input.teamSize * dynamicPricing["perplexity-pro"].basePrice; 
-    const savings = combinedCurrentCost - perplexityCost;
-    
-    recommendations.push({
-      title: "The Ultimate Aggregator Swap",
-      description: `You are paying for both OpenAI and Anthropic separately. By switching to Perplexity Pro ($${dynamicPricing["perplexity-pro"].basePrice}/mo), your team gets access to both GPT-4o AND Claude 3.5 Sonnet.`,
-      savingsMonthly: savings,
-      type: "redundancy"
-    });
-    totalSavingsMonthly += savings;
-    optimizedTools = optimizedTools.filter(t => !["chatgpt-plus", "chatgpt-team", "claude-pro", "claude-team"].includes(t));
-    if (!optimizedTools.includes("perplexity-pro")) optimizedTools.push("perplexity-pro");
+  // Rule 3: Cursor Teams Overspend
+  const cursorTool = optimizedTools.find(t => t.toolId === "cursor");
+  if (cursorTool && cursorTool.planId === "business" && cursorTool.seats <= 2) {
+    const currentCost = cursorTool.monthlySpend > 0 ? cursorTool.monthlySpend : cursorTool.seats * 40;
+    const proCost = cursorTool.seats * 20;
+    const savings = currentCost - proCost;
+    if (savings > 0) {
+      recommendations.push({
+        title: "Cursor Teams Overspend",
+        description: `Cursor Teams ($40/user) is overkill for 1-2 users. Switch to Cursor Pro ($20/user) for the same core AI capabilities.`,
+        savingsMonthly: savings,
+        type: "tier-optimization"
+      });
+      totalSavingsMonthly += savings;
+      cursorTool.planId = "pro";
+      cursorTool.monthlySpend = proCost;
+    }
   }
 
-  // Rule 4: The Developer Double-Dip (Cursor vs Copilot)
-  if (input.tools.includes("cursor") && input.tools.includes("github-copilot")) {
-    const copilotCost = input.teamSize * dynamicPricing["github-copilot"].basePrice; 
+  // Rule 4: Copilot Business for Solo Dev
+  const copilotTool = optimizedTools.find(t => t.toolId === "github-copilot");
+  if (copilotTool && copilotTool.planId === "business" && copilotTool.seats === 1) {
+    const currentCost = copilotTool.monthlySpend > 0 ? copilotTool.monthlySpend : 19;
+    const indivCost = 10;
+    const savings = currentCost - indivCost;
+    if (savings > 0) {
+      recommendations.push({
+        title: "Copilot Business for Solo Dev",
+        description: `Copilot Business is meant for enterprise policy control. A solo developer should use Copilot Individual.`,
+        savingsMonthly: savings,
+        type: "tier-optimization"
+      });
+      totalSavingsMonthly += savings;
+      copilotTool.planId = "individual";
+      copilotTool.monthlySpend = indivCost;
+    }
+  }
+
+  // Rule 5: Redundant Coding Assistants (Cursor + Copilot)
+  if (cursorTool && copilotTool) {
+    const savings = copilotTool.monthlySpend > 0 ? copilotTool.monthlySpend : copilotTool.seats * 10;
     recommendations.push({
       title: "Redundant Coding Assistants",
-      description: "You are paying for both Cursor and GitHub Copilot. Cursor has built-in AI autocomplete that replaces Copilot. Canceling Copilot eliminates redundant spend.",
-      savingsMonthly: copilotCost,
+      description: `You are paying for both Cursor and GitHub Copilot. Cursor has built-in AI autocomplete that replaces Copilot. Cancel Copilot.`,
+      savingsMonthly: savings,
       type: "redundancy"
     });
-    totalSavingsMonthly += copilotCost;
-    optimizedTools = optimizedTools.filter(t => t !== "github-copilot");
+    totalSavingsMonthly += savings;
+    optimizedTools = optimizedTools.filter(t => t.toolId !== "github-copilot");
   }
-  
-  // Rule 5: Shadow AI Spend Detection
-  if (input.monthlySpend > currentEstimatedSpend + 50) {
-    const unaccounted = input.monthlySpend - currentEstimatedSpend;
+
+  // Rule 6: Windsurf vs Cursor overlap
+  const windsurfTool = optimizedTools.find(t => t.toolId === "windsurf");
+  if (windsurfTool && cursorTool) {
+    const savings = windsurfTool.monthlySpend > 0 ? windsurfTool.monthlySpend : windsurfTool.seats * 20;
     recommendations.push({
-      title: "Shadow AI Spend Detected",
-      description: `You reported spending $${input.monthlySpend}/mo, but your selected core stack only costs ~$${currentEstimatedSpend}/mo. You have ~$${unaccounted}/mo in "Shadow AI" spend.`,
-      savingsMonthly: Math.round(unaccounted * 0.5), 
+      title: "Redundant IDE AI",
+      description: `Windsurf and Cursor overlap 100% in functionality. Pick one and cancel the other. We recommend keeping Cursor for now.`,
+      savingsMonthly: savings,
+      type: "redundancy"
+    });
+    totalSavingsMonthly += savings;
+    optimizedTools = optimizedTools.filter(t => t.toolId !== "windsurf");
+  }
+
+  // Rule 7: UI Retail vs API Credits
+  // If they have large number of seats on Claude or ChatGPT for coding/data, suggest API.
+  const allChat = optimizedTools.filter(t => t.toolId === "chatgpt" || t.toolId === "claude");
+  const totalChatSpend = allChat.reduce((sum, t) => sum + t.monthlySpend, 0);
+  if (totalChatSpend >= 300 && input.primaryUseCase !== "writing") {
+    const savings = Math.round(totalChatSpend * 0.4); // Assume 40% savings via API
+    recommendations.push({
+      title: "Switch to API Direct for Scale",
+      description: `You are spending $${totalChatSpend}/mo on retail chat interfaces. By switching to direct API usage (via an open-source UI like LibreChat) or utilizing startup cloud credits, you could save ~40% and only pay for what you use.`,
+      savingsMonthly: savings,
       type: "tier-optimization"
     });
-    totalSavingsMonthly += Math.round(unaccounted * 0.5);
+    totalSavingsMonthly += savings;
+    // We won't remove them from optimized tools, just reduce spend
+    allChat.forEach(t => {
+      t.monthlySpend = Math.round(t.monthlySpend * 0.6);
+    });
   }
 
-  // Final Calculations
-  const optimizedSpend = Math.max(0, baseSpend - totalSavingsMonthly);
-  const savingsPercentage = baseSpend > 0 ? Math.round((totalSavingsMonthly / baseSpend) * 100) : 0;
+  const optimizedSpend = Math.max(0, currentSpend - totalSavingsMonthly);
+  const savingsPercentage = currentSpend > 0 ? Math.round((totalSavingsMonthly / currentSpend) * 100) : 0;
 
   return {
-    currentEstimatedSpend: baseSpend,
-    optimizedSpend: Math.round(optimizedSpend),
-    totalSavingsMonthly: Math.round(totalSavingsMonthly),
-    totalSavingsAnnual: Math.round(totalSavingsMonthly * 12),
+    currentEstimatedSpend: currentSpend,
+    optimizedSpend,
+    totalSavingsMonthly,
+    totalSavingsAnnual: totalSavingsMonthly * 12,
     savingsPercentage,
     recommendations,
     optimizedTools,
-    pricingMap: dynamicPricing // return this so the UI can display the live fetched prices
   };
 }
