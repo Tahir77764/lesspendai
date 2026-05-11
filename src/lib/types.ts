@@ -32,7 +32,9 @@ export const AI_TOOLS: ToolDef[] = [
     plans: [
       { id: "hobby", name: "Hobby", basePrice: 0, perUser: true },
       { id: "pro", name: "Pro", basePrice: 20, perUser: true },
-      { id: "business", name: "Business (Teams)", basePrice: 40, perUser: true },
+      { id: "pro-plus", name: "Pro+", basePrice: 60, perUser: true },
+      { id: "ultra", name: "Ultra", basePrice: 200, perUser: true },
+      { id: "teams", name: "Teams", basePrice: 40, perUser: true },
       { id: "enterprise", name: "Enterprise", basePrice: 0, perUser: true },
     ]
   },
@@ -40,7 +42,9 @@ export const AI_TOOLS: ToolDef[] = [
     id: "github-copilot",
     name: "GitHub Copilot",
     plans: [
-      { id: "individual", name: "Individual", basePrice: 10, perUser: true },
+      { id: "free", name: "Free", basePrice: 0, perUser: true },
+      { id: "pro", name: "Pro", basePrice: 10, perUser: true },
+      { id: "pro-plus", name: "Pro+", basePrice: 39, perUser: true },
       { id: "business", name: "Business", basePrice: 19, perUser: true },
       { id: "enterprise", name: "Enterprise", basePrice: 39, perUser: true },
     ]
@@ -50,11 +54,11 @@ export const AI_TOOLS: ToolDef[] = [
     name: "Claude",
     plans: [
       { id: "free", name: "Free", basePrice: 0, perUser: true },
-      { id: "pro", name: "Pro", basePrice: 20, perUser: true },
-      { id: "max", name: "Power/Max", basePrice: 125, perUser: true },
-      { id: "team", name: "Team", basePrice: 30, perUser: true, minSeats: 5 },
-      { id: "enterprise", name: "Enterprise", basePrice: 0, perUser: true },
-      { id: "api", name: "API Direct", basePrice: 0, perUser: false },
+      { id: "pro", name: "Pro", basePrice: 17, perUser: true },
+      { id: "max", name: "Max", basePrice: 100, perUser: true },
+      { id: "team-standard", name: "Team (Standard)", basePrice: 25, perUser: true, minSeats: 5 },
+      { id: "team-premium", name: "Team (Premium)", basePrice: 125, perUser: true, minSeats: 5 },
+      { id: "enterprise", name: "Enterprise", basePrice: 20, perUser: true },
     ]
   },
   {
@@ -62,19 +66,21 @@ export const AI_TOOLS: ToolDef[] = [
     name: "ChatGPT",
     plans: [
       { id: "free", name: "Free", basePrice: 0, perUser: true },
+      { id: "go", name: "Go", basePrice: 5, perUser: true },
       { id: "plus", name: "Plus", basePrice: 20, perUser: true },
-      { id: "team", name: "Team", basePrice: 30, perUser: true, minSeats: 2 },
+      { id: "pro", name: "Pro", basePrice: 200, perUser: true },
+      { id: "business-codex", name: "Business Codex", basePrice: 0, perUser: true },
+      { id: "business-chatgpt-codex", name: "Business ChatGPT & Codex", basePrice: 20, perUser: true },
       { id: "enterprise", name: "Enterprise", basePrice: 0, perUser: true },
-      { id: "api", name: "API Direct", basePrice: 0, perUser: false },
     ]
   },
   {
     id: "gemini",
     name: "Gemini",
     plans: [
-      { id: "pro", name: "Pro (Business)", basePrice: 20, perUser: true },
-      { id: "ultra", name: "Ultra (Enterprise)", basePrice: 30, perUser: true },
-      { id: "api", name: "API Direct", basePrice: 0, perUser: false },
+      { id: "google-ai-plus", name: "Google AI Plus", basePrice: 5, perUser: true },
+      { id: "google-ai-pro", name: "Google AI Pro", basePrice: 20, perUser: true },
+      { id: "google-ai-ultra", name: "Google AI Ultra", basePrice: 300, perUser: true },
     ]
   },
   {
@@ -83,21 +89,10 @@ export const AI_TOOLS: ToolDef[] = [
     plans: [
       { id: "free", name: "Free", basePrice: 0, perUser: true },
       { id: "pro", name: "Pro", basePrice: 20, perUser: true },
-      { id: "teams", name: "Teams", basePrice: 30, perUser: true, minSeats: 3 },
-    ]
-  },
-  {
-    id: "anthropic-api",
-    name: "Anthropic API",
-    plans: [
-      { id: "api", name: "API Direct", basePrice: 0, perUser: false },
-    ]
-  },
-  {
-    id: "openai-api",
-    name: "OpenAI API",
-    plans: [
-      { id: "api", name: "API Direct", basePrice: 0, perUser: false },
+      { id: "max", name: "Max", basePrice: 200, perUser: true },
+      { id: "teams", name: "Teams", basePrice: 40, perUser: true },
+      { id: "enterprise", name: "Enterprise", basePrice: 0, perUser: true },
     ]
   }
 ];
+

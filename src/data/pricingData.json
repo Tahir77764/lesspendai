@@ -8,18 +8,113 @@
           "vendor": "Cursor",
           "plans": [
             {
+              "name": "Hobby",
+              "monthlyPrice": 0,
+              "annualPrice": 0,
+              "perUser": true,
+              "auditLogic": "Great for trying out Cursor.",
+              "features": [
+                "No credit card required",
+                "Limited Agent requests",
+                "Limited Tab completions"
+              ]
+            },
+            {
               "name": "Pro",
               "monthlyPrice": 20,
               "annualPrice": 192,
               "perUser": true,
-              "auditLogic": "Standard for solo/small teams."
+              "auditLogic": "Standard for solo/small teams.",
+              "features": [
+                "Extended limits on Agent",
+                "Access to frontier models",
+                "MCPs, skills, and hooks",
+                "Cloud agents"
+              ]
+            },
+            {
+              "name": "Pro+",
+              "monthlyPrice": 60,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Recommended for heavy users wanting 3x usage limits.",
+              "features": [
+                "3x usage on all OpenAI, Claude, Gemini models"
+              ]
+            },
+            {
+              "name": "Ultra",
+              "monthlyPrice": 200,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "For extreme power users needing 20x usage limits.",
+              "features": [
+                "20x usage on all OpenAI, Claude, Gemini models",
+                "Priority access to new features"
+              ]
             },
             {
               "name": "Teams",
               "monthlyPrice": 40,
               "annualPrice": 432,
               "perUser": true,
-              "auditLogic": "Overspend Signal: 1-2 users on Team (use Pro instead)."
+              "auditLogic": "Overspend Signal: 1-2 users on Team (use Pro instead).",
+              "features": [
+                "Shared chats, commands, and rules",
+                "Centralized team billing",
+                "Usage analytics and reporting",
+                "Org-wide privacy mode controls",
+                "Role-based access control",
+                "SAML/OIDC SSO"
+              ]
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": null,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Custom pricing for large organizations.",
+              "features": [
+                "Pooled usage",
+                "Invoice/PO billing",
+                "SCIM seat management",
+                "AI code tracking API and audit logs",
+                "Granular admin and model controls",
+                "Priority support and account management"
+              ]
+            }
+          ],
+          "bugbotPlans": [
+            {
+              "name": "Pro",
+              "monthlyPrice": 40,
+              "perUser": true,
+              "features": [
+                "14 day individual trial",
+                "Reviews on up to 200 PRs/mo",
+                "Access to Bugbot rules"
+              ]
+            },
+            {
+              "name": "Teams",
+              "monthlyPrice": 40,
+              "perUser": true,
+              "features": [
+                "14-day team trial",
+                "Code reviews on all PRs",
+                "Analytics and reporting dashboard",
+                "Advanced rules and settings"
+              ]
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": null,
+              "perUser": true,
+              "features": [
+                "30-day org-wide trial",
+                "Advanced analytics and reporting",
+                "Priority support and account management"
+              ]
             }
           ]
         },
@@ -27,18 +122,61 @@
           "vendor": "GitHub Copilot",
           "plans": [
             {
-              "name": "Individual",
+              "name": "Free",
+              "monthlyPrice": 0,
+              "annualPrice": 0,
+              "perUser": true,
+              "auditLogic": "Fast way to get started.",
+              "features": [
+                "50 agent mode or chat requests per month",
+                "2000 completions per month"
+              ]
+            },
+            {
+              "name": "Pro",
               "monthlyPrice": 10,
               "annualPrice": 100,
-              "perUser": false,
-              "auditLogic": "Best for solo devs."
+              "perUser": true,
+              "auditLogic": "Accelerate workflows for solo devs.",
+              "features": [
+                "Copilot cloud agent",
+                "Copilot code review"
+              ]
+            },
+            {
+              "name": "Pro+",
+              "monthlyPrice": 39,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Scale with agents and more models.",
+              "features": [
+                "Access to all models, including Claude Opus 4.7 and more"
+              ]
             },
             {
               "name": "Business",
               "monthlyPrice": 19,
               "annualPrice": 204,
               "perUser": true,
-              "auditLogic": "Required for IP protection/policy controls."
+              "auditLogic": "Required for IP protection/policy controls.",
+              "features": [
+                "Copilot cloud agent",
+                "Copilot code review",
+                "Claude and Codex on GitHub and VS Code",
+                "300 premium requests to use latest models per user, with the option to buy more"
+              ]
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": 39,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Scale with agents and more models for large teams.",
+              "features": [
+                "Access to all models, including Claude Opus 4.6 and more",
+                "3.33x as many premium requests than Business to use the latest models",
+                "Access to GitHub Spark"
+              ]
             }
           ]
         },
@@ -46,18 +184,68 @@
           "vendor": "Windsurf",
           "plans": [
             {
+              "name": "Free",
+              "monthlyPrice": 0,
+              "annualPrice": 0,
+              "perUser": true,
+              "auditLogic": "Good for trial and light usage.",
+              "features": [
+                "Light quota to code with agents",
+                "Limited model availability",
+                "Unlimited inline edits",
+                "Unlimited Tab completions"
+              ]
+            },
+            {
               "name": "Pro",
               "monthlyPrice": 20,
               "annualPrice": 192,
-              "perUser": false,
-              "auditLogic": "Redundancy Alert: Overlaps 100% with Cursor Pro."
+              "perUser": true,
+              "auditLogic": "Redundancy Alert: Overlaps 100% with Cursor Pro.",
+              "features": [
+                "Increased quotas, including access to frontier OpenAI, Claude, and Gemini models",
+                "Full model availability",
+                "Free use of SWE-1.6 and leading open source models",
+                "Access to cloud agents (Devin Cloud)",
+                "Purchase extra usage at API pricing"
+              ]
+            },
+            {
+              "name": "Max",
+              "monthlyPrice": 200,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "For extreme power users.",
+              "features": [
+                "Significantly higher quotas"
+              ]
             },
             {
               "name": "Teams",
-              "monthlyPrice": 30,
-              "annualPrice": 324,
+              "monthlyPrice": 40,
+              "annualPrice": null,
               "perUser": true,
-              "auditLogic": "Check seat minimums (often 3-seat floor)."
+              "auditLogic": "Check seat minimums.",
+              "features": [
+                "Centralized billing",
+                "Admin dashboard with analytics",
+                "Priority support",
+                "Automated zero data retention"
+              ]
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": null,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Custom deployment for large orgs.",
+              "features": [
+                "Highest priority support",
+                "Dedicated account management",
+                "Role-Based Access Control (RBAC)",
+                "SSO + Access control features",
+                "Hybrid deployment option"
+              ]
             }
           ]
         }
@@ -71,19 +259,89 @@
           "vendor": "ChatGPT",
           "plans": [
             {
-              "name": "Plus",
-              "monthlyPrice": 20,
+              "name": "Free",
+              "monthlyPrice": 0,
               "annualPrice": null,
-              "perUser": false,
-              "auditLogic": "Individual power users."
+              "perUser": true,
+              "auditLogic": "Intelligence for everyday tasks.",
+              "features": [
+                "Limited access to GPT-5.5 Instant",
+                "Limited messages and uploads",
+                "Limited and slower image generation"
+              ]
             },
             {
-              "name": "Team",
-              "monthlyPrice": 30,
-              "annualPrice": 300,
+              "name": "Go",
+              "monthlyPrice": 399,
+              "annualPrice": null,
               "perUser": true,
-              "auditLogic": "Critical: 2-seat minimum. Avoid for solo users.",
-              "minimumSeats": 2
+              "auditLogic": "Keep chatting with expanded access.",
+              "features": [
+                "More access to GPT-5.5 Instant",
+                "More messages"
+              ]
+            },
+            {
+              "name": "Plus",
+              "monthlyPrice": 1999,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Do more with advanced intelligence.",
+              "features": [
+                "Advanced reasoning with GPT-5.5 Thinking"
+              ]
+            },
+            {
+              "name": "Pro",
+              "monthlyPrice": 10699,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Maximize your productivity.",
+              "features": [
+                "5x or 20x more usage",
+                "5x, 10x or 20x more Codex usage"
+              ]
+            },
+            {
+              "name": "Business Codex",
+              "monthlyPrice": null,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "A plan for development-focused teams with pay-as-you-go pricing.",
+              "features": [
+                "AI-powered software engineering",
+                "Automated code and security reviews",
+                "Automate tasks on your computer",
+                "Take action across your documents, tools, and codebases",
+                "Built-in worktrees and cloud environments for multi-agent workflows",
+                "No fixed seat fee; pay as you go based on usage",
+                "A secure, dedicated workspace"
+              ]
+            },
+            {
+              "name": "Business ChatGPT & Codex",
+              "monthlyPrice": 1800,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "A secure, collaborative workspace for startups and growing businesses.",
+              "features": [
+                "Unlimited core chat and access to the best models for work",
+                "60+ apps that bring your tools and data into ChatGPT",
+                "Business features like apps, data analysis, record mode, canvas, shared projects, and custom workspace GPTs"
+              ]
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": null,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Enterprise-grade AI, security, and support for businesses operating at scale.",
+              "features": [
+                "Expanded context window that supports longer inputs and larger files",
+                "Enterprise-level security and controls, including SCIM, EKM, user analytics, domain verification, and role-based access controls",
+                "Advanced data privacy with custom data retention policies, encryption at rest and in transit, and no training on your business data by default",
+                "Support for data residency in ten regions"
+              ]
             }
           ]
         },
@@ -91,26 +349,95 @@
           "vendor": "Claude",
           "plans": [
             {
+              "name": "Free",
+              "monthlyPrice": 0,
+              "annualPrice": 0,
+              "perUser": true,
+              "auditLogic": "Basic access to Claude.",
+              "features": [
+                "Chat on web, iOS, Android, and on your desktop"
+              ]
+            },
+            {
               "name": "Pro",
               "monthlyPrice": 20,
-              "annualPrice": null,
-              "perUser": false,
-              "auditLogic": "Best for heavy reasoning/coding tasks."
-            },
-            {
-              "name": "Power",
-              "monthlyPrice": 125,
-              "annualPrice": 1350,
-              "perUser": false,
-              "auditLogic": "Overspend Signal: Only for 24/7 \"Claude Code\" users."
-            },
-            {
-              "name": "Team",
-              "monthlyPrice": 30,
-              "annualPrice": 300,
+              "annualPrice": 200,
               "perUser": true,
-              "auditLogic": "Overspend Signal: 5-seat minimum ($150/mo floor).",
+              "auditLogic": "For everyday productivity.",
+              "features": [
+                "Everything in Free, plus standard Pro features"
+              ]
+            },
+            {
+              "name": "Max",
+              "monthlyPrice": 100,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Get the most out of Claude.",
+              "features": [
+                "Everything in Pro, plus maximum usage"
+              ]
+            },
+            {
+              "name": "Team (Standard)",
+              "monthlyPrice": 25,
+              "annualPrice": 240,
+              "perUser": true,
+              "auditLogic": "For teams of 5 to 150.",
+              "features": [
+                "All Claude features, plus more usage than Pro*"
+              ],
               "minimumSeats": 5
+            },
+            {
+              "name": "Team (Premium)",
+              "monthlyPrice": 125,
+              "annualPrice": 1200,
+              "perUser": true,
+              "auditLogic": "For high-usage teams of 5 to 150.",
+              "features": [
+                "5x more usage than standard seats*"
+              ],
+              "minimumSeats": 5
+            },
+            {
+              "name": "Enterprise",
+              "monthlyPrice": 20,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Seat price + usage at API rates. Usage cost scales with model and task.",
+              "features": [
+                "All Team plan features",
+                "Admins set user and org spend limits",
+                "Google Docs cataloging",
+                "Role-based access with fine grained permissioning"
+              ]
+            }
+          ],
+          "apiModels": [
+            {
+              "name": "Opus 4.7",
+              "description": "Most intelligent model for agents and coding",
+              "inputCostPerMTok": 5,
+              "outputCostPerMTok": 25,
+              "promptCachingWritePerMTok": 6.25,
+              "promptCachingReadPerMTok": 0.50
+            },
+            {
+              "name": "Sonnet 4.6",
+              "description": "Optimal balance of intelligence, cost, and speed",
+              "inputCostPerMTok": 3,
+              "outputCostPerMTok": 15,
+              "promptCachingWritePerMTok": 3.75,
+              "promptCachingReadPerMTok": 0.30
+            },
+            {
+              "name": "Haiku 4.5",
+              "description": "Fastest, most cost-efficient model",
+              "inputCostPerMTok": 1,
+              "outputCostPerMTok": 5,
+              "promptCachingWritePerMTok": 1.25,
+              "promptCachingReadPerMTok": 0.10
             }
           ]
         },
@@ -118,18 +445,43 @@
           "vendor": "Gemini",
           "plans": [
             {
-              "name": "Business",
-              "monthlyPrice": 20,
-              "annualPrice": 216,
+              "name": "Google AI Plus",
+              "monthlyPrice": 399,
+              "annualPrice": 4000,
               "perUser": true,
-              "auditLogic": "Best for Workspace/Drive integration."
+              "auditLogic": "Basic access to 3.1 Pro and image generation.",
+              "features": [
+                "Gemini app: Get next-level access to our most capable model 3.1 Pro",
+                "Deep Research on 3.1 Pro",
+                "Image generation with Nano Banana Pro",
+                "Unlock video generation with limited access to Veo 3.1"
+              ]
             },
             {
-              "name": "Enterprise",
-              "monthlyPrice": 30,
-              "annualPrice": 324,
+              "name": "Google AI Pro",
+              "monthlyPrice": 1950,
+              "annualPrice": 19500,
               "perUser": true,
-              "auditLogic": "Only for advanced security/AI recording."
+              "auditLogic": "Higher access to 3.1 Pro and video generation.",
+              "features": [
+                "Gemini app: Get higher access to our most capable model 3.1 Pro",
+                "Deep Research on 3.1 Pro",
+                "Image generation with Nano Banana Pro",
+                "Unlock video generation with limited access to Veo 3.1"
+              ]
+            },
+            {
+              "name": "Google AI Ultra",
+              "monthlyPrice": 24500,
+              "annualPrice": null,
+              "perUser": true,
+              "auditLogic": "Highest limits and exclusive features including Deep Think and Veo 3.1.",
+              "features": [
+                "Gemini app: The highest limits for features and models",
+                "Access to Deep Think",
+                "Access to Veo 3.1 (the latest video generation model)",
+                "Available only with monthly billing"
+              ]
             }
           ]
         }

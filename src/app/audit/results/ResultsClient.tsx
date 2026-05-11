@@ -217,20 +217,29 @@ export default function ResultsClient() {
             </div>
           ) : (
             <div className="grid gap-4">
-              {report.recommendations.map((rec, i) => (
-                <div key={i} className="flex gap-5 p-6 rounded-2xl border border-amber-500/20 bg-gradient-to-r from-amber-500/5 to-transparent hover:bg-amber-500/10 transition-colors">
-                  <div className="shrink-0 mt-1">
-                    <div className="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center"><AlertTriangle size={20} /></div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
-                      <h3 className="text-lg font-bold text-white">{rec.title}</h3>
-                      <span className="font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-sm">Save \${rec.savingsMonthly}/mo</span>
+              {report.recommendations.map((rec, i) => {
+                const isUpgrade = rec.type === "feature-upgrade";
+                return (
+                  <div key={i} className={`flex gap-5 p-6 rounded-2xl border transition-colors ${isUpgrade ? 'border-blue-500/20 bg-gradient-to-r from-blue-500/5 to-transparent hover:bg-blue-500/10' : 'border-amber-500/20 bg-gradient-to-r from-amber-500/5 to-transparent hover:bg-amber-500/10'}`}>
+                    <div className="shrink-0 mt-1">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isUpgrade ? 'bg-blue-500/20 text-blue-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                        {isUpgrade ? <Sparkles size={20} /> : <AlertTriangle size={20} />}
+                      </div>
                     </div>
-                    <p className="text-base text-slate-300 leading-relaxed">{rec.description}</p>
+                    <div className="flex-1">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-2">
+                        <h3 className="text-lg font-bold text-white">{rec.title}</h3>
+                        {rec.savingsMonthly > 0 ? (
+                          <span className="font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-sm">Save ${rec.savingsMonthly}/mo</span>
+                        ) : (
+                          <span className="font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full text-sm">Better Features</span>
+                        )}
+                      </div>
+                      <p className="text-base text-slate-300 leading-relaxed">{rec.description}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </motion.div>

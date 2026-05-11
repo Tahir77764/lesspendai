@@ -95,3 +95,23 @@
 **Plan for tomorrow:**
 - Final polish and testing of the MVP flow.
 - Look into deployment options on Vercel.
+
+## Day 6 - 2026-05-11
+**Hours worked:** 4:00
+
+**What I did today:**
+- Fully synchronized `pricingData.json` and `src/lib/types.ts` with the latest pricing tiers and feature offerings for Cursor, Copilot, Claude, ChatGPT, Gemini, and Windsurf.
+- Converted all database pricing to a standard USD baseline to ensure mathematical consistency.
+- Updated the Audit Form (`/audit/page.tsx`) by removing automated spend calculations, allowing users to manually input their exact billing costs.
+- Re-architected the Audit Engine (`pricing.ts`) to introduce a "General Overpayment" check, validating manual user inputs against official pricing.
+- Built cross-tool "Feature Upgrade" logic that analyzes the user's primary use case (e.g., Coding vs. Research) and actively replaces inferior tools with better alternatives (e.g., swapping ChatGPT for Claude Pro for coding) while calculating the exact monetary savings.
+- Enhanced the Results Dashboard UI to beautifully highlight qualitative "Better Features" upgrades with custom blue/sparkles styling.
+
+**What I got stuck on today:**
+- The logic of the audit was not perfect at first. I struggled with a massive currency mismatch bug where comparing manual user input (in USD) against the database prices (in INR) caused the overpayment logic to fail completely (e.g. $755 was seen as "underpaying" compared to ₹1999).
+- I got stuck on the feature-upgrade recommendations. The engine generated the correct text advice but failed to actually swap the `toolId` and `planId` inside the `optimizedTools` array. This caused the "Perfect Stack" UI to stubbornly display the old, un-optimized tool instead of the new recommendation.
+- Managing user expectations vs automated logic: Auto-filling the monthly spend when changing plans aggressively overwrote the user's manual "overpayment" entries, forcing me to disable the auto-fill behavior entirely.
+
+**Plan for tomorrow:**
+- Final UI polish and addressing any lingering cross-browser quirks.
+- Prepare the architecture for production launch.

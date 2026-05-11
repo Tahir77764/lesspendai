@@ -86,16 +86,6 @@ export default function AuditForm() {
       const tool = prev[id];
       const newTool = { ...tool, [field]: value };
       
-      // Auto-calculate spend if plan or seats changed
-      if (field === 'planId' || field === 'seats') {
-        const toolDef = AI_TOOLS.find(t => t.id === id);
-        const plan = toolDef?.plans.find(p => p.id === newTool.planId);
-        if (plan) {
-           const calculatedSpend = plan.perUser ? plan.basePrice * Math.max(newTool.seats, plan.minSeats || 1) : plan.basePrice;
-           newTool.monthlySpend = calculatedSpend;
-        }
-      }
-
       return {
         ...prev,
         [id]: newTool
