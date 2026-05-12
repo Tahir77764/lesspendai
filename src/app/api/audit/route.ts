@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       const currentPrice = currentTool.monthlySpend;
 
       // Find alternatives in the same category
-      const alternatives = [];
+      const alternatives: any[] = [];
       for (const t of category.tools) {
         const altAiT = AI_TOOLS.find(at => at.name === t.vendor);
         const altToolId = altAiT ? altAiT.id : normalizeId(t.vendor);
