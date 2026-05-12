@@ -115,3 +115,36 @@
 **Plan for tomorrow:**
 - Final UI polish and addressing any lingering cross-browser quirks.
 - Prepare the architecture for production launch.
+
+## Day 7 - 2026-05-12
+**Hours worked:** 4:00
+
+**What I did today:**
+- Implemented actual email sending functionality using `nodemailer` in `src/app/api/lead/route.ts` to deliver the AI audit report URLs directly to users.
+- Added environment variable support (`.env.local`) for email credentials (`EMAIL_USER`, `EMAIL_PASS`) and base URLs to ensure production-ready deployments.
+- Fixed a critical URL encoding bug by migrating the stateless shareable ID generation from standard `base64` to `base64url`. This eliminated broken links caused by slash (`/`) characters interfering with Next.js dynamic routing.
+- Engineered a hybrid pricing/feature optimization engine in `src/app/api/audit/route.ts`. The system uses hardcoded logic to strictly filter alternative AI tools by price (ensuring the new tool costs the same or less) and then leverages the Gemini API to dynamically compare raw feature sets, guaranteeing qualitative upgrades.
+- Refined the "Feature Upgrade" UI flow to seamlessly swap the recommended tools into the "Perfect Stack" visualization based on Gemini's real-time analysis.
+
+**What I learned today:**
+- Standard Base64 encoding includes `+` and `/` characters which will fatally break web frameworks like Next.js that rely on slash-based dynamic routing (`/share/[id]`). `base64url` is mandatory for stateless URL parameters.
+- Combining deterministic logic (for strict constraints like price matching) with an LLM (for qualitative reasoning like feature comparison) creates a highly robust and reliable hybrid AI architecture.
+- `request.headers.get("origin")` is useful for detecting the live deployment URL dynamically, but falling back to an explicit environment variable (`NEXT_PUBLIC_SITE_URL`) is best practice for guaranteed stability.
+
+**Plan for tomorrow:**
+- Finalize the production deployment process on Vercel.
+- Launch the MVP and monitor initial user feedback on the dynamic feature comparisons.
+
+## Vercel Deployment Guide
+
+To deploy the "Less Spend AI" project to Vercel, follow these exact steps:
+
+1. **Push to GitHub**: Ensure all your latest code is committed and pushed to your GitHub repository.
+2. **Import Project**: Log in to [Vercel](https://vercel.com/) and click "Add New..." > "Project". Select your GitHub repository.
+3. **Configure Environment Variables**: Before clicking deploy, expand the "Environment Variables" section. You MUST add the following keys for the app to function in production:
+   - `EMAIL_USER`: Your Gmail address.
+   - `EMAIL_PASS`: Your 16-character Gmail App Password.
+   - `ADMIN_EMAIL`: Your admin email.
+   - `NEXT_PUBLIC_SITE_URL`: The exact production domain Vercel assigns you (e.g., `https://lesspend.vercel.app`). *Note: You can add this after the first deployment once you know your production URL, then trigger a redeploy.*
+4. **Deploy**: Click the "Deploy" button. Vercel will automatically detect that it is a Next.js App Router project, install dependencies, and build the production bundle.
+5. **Verify**: Once deployed, run a test audit to ensure the backend API successfully communicates with Gemini and Nodemailer correctly sends the email containing the shareable URL.

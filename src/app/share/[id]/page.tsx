@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let percentage = 0;
   
   try {
-    const decoded = JSON.parse(Buffer.from(resolvedParams.id, 'base64').toString('utf-8'));
+    const decoded = JSON.parse(Buffer.from(resolvedParams.id, 'base64url').toString('utf-8'));
     savings = decoded.s;
     percentage = decoded.p;
   } catch (e) {
@@ -45,7 +45,7 @@ export default async function SharePage({ params }: Props) {
   let valid = false;
 
   try {
-    data = JSON.parse(Buffer.from(resolvedParams.id, 'base64').toString('utf-8'));
+    data = JSON.parse(Buffer.from(resolvedParams.id, 'base64url').toString('utf-8'));
     valid = true;
   } catch (e) {
     console.error("Invalid share ID");
